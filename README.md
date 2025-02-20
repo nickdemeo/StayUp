@@ -1,5 +1,5 @@
 # StayUp
-StayUpis a machine learning-driven web application 
+StayUp is a machine learning-driven web application 
 designed to predict stock prices using Long Short-Term 
 Memory (LSTM) neural networks. By leveraging 
 historical stock data from Yahoo Finance, the project 
