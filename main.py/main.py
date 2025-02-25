@@ -71,3 +71,19 @@ if st.button('Predict Future Prices'):  # Adding a button to trigger prediction
     x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], 1)  # Reshaping data for LSTM model
     predictions = model.predict(x_test)  # Making predictions using the LSTM model
     predicted_prices = scaler.inverse_transform(predictions)  # Inverse transforming predicted prices
+    
+ # Add predictions to the plot
+    future_dates = pd.date_range(start=data.index[-1], periods=len(predictions)+1, freq='B')[1:]  # Generating future dates
+    fig, ax = plt.subplots(figsize=(15, 8))  # Creating a subplot for plotting
+    ax.plot(data.index, data['Close'], label='Historical Close Price', color='blue')  # Plotting historical close price
+    ax.plot(future_dates, predicted_prices, label='Predicted Close Price', color='green', linestyle='--')  # Plotting predicted close price
+    ax.xaxis.set_major_locator(mdates.YearLocator())  # Setting major locator for x-axis
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))  # Setting date formatter for x-axis
+    plt.title(f'Prediction of Future Close Prices for {selected_stock}')  # Adding title to the plot
+    plt.xlabel('Date')  # Adding label to x-axis
+    plt.ylabel('Price (USD)')  # Adding label to y-axis
+    plt.legend()  # Adding legend to the plot
+    st.pyplot(fig)  # Displaying plot of predicted prices
+
+# About section
+st.write("## About this Dashboard")  # Adding a header for the about section
