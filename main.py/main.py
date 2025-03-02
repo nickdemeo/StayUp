@@ -87,3 +87,6 @@ if st.button('Predict Future Prices'):  # Adding a button to trigger prediction
 
 # About section
 st.write("## About this Dashboard")  # Adding a header for the about section
+st.info("""
+This dashboard is used as a tool to help users analyze historical data to make future predictions.
+""")
