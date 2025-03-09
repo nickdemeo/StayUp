@@ -29,6 +29,7 @@ end_date = st.sidebar.date_input("End Date", datetime.now())  # Adding a date in
 # Function to load data
 def load_data(ticker, start, end):
     data = yf.download(ticker, start=start, end=end)  # Downloading stock data using yfinance
+    if 'Adj Close' in data.columns: #Check if 'Adj Close' exists before dropping
     data.drop('Adj Close', axis=1, inplace=True)  # Dropping the 'Adj Close' column from the data
     return data
 
