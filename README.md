@@ -6,7 +6,7 @@ historical stock data from Yahoo Finance, the project
 aims to provide investors with an intuitive tool for 
 analyzing trends, visualizing data, and making 
 informed financial decisions. The application will be 
-developed using Streamlitfor an interactive user 
+developed using Streamlit for an interactive user 
 experience, making stock market analysis accessible 
 even to non-technical users. This project aligns with the 
 growing need for data-driven investment strategies, 
