@@ -17,13 +17,13 @@ st.set_page_config(page_title='StayUp', layout='wide')  # Configuring the Stream
 st.title('StayUp')  # Adding a title to the Streamlit app
 st.markdown("""
 This interactive dashboard uses a Long Short-Term Memory (LSTM) network to predict stock prices based on historical data from Yahoo Finance.
-Select a stock ticker, define the date range, and click the predict button to see future price projections.
+Enter a stock ticker, determine the date range, and select the predict button to see future price projections.
 """)  # Adding a markdown text for introduction
 
 # Sidebar - User input features
 st.sidebar.header('User Input Features')  # Adding a header to the sidebar
 selected_stock = st.sidebar.text_input("Enter Stock Ticker", 'TSLA')  # Adding a text input for entering stock ticker in the sidebar
-start_date = st.sidebar.date_input("Start Date", datetime(2010, 1, 1))  # Adding a date input for selecting start date in the sidebar
+start_date = st.sidebar.date_input("Start Date", datetime(2005, 1, 1))  # Adding a date input for selecting start date in the sidebar
 end_date = st.sidebar.date_input("End Date", datetime.now())  # Adding a date input for selecting end date in the sidebar
 
 # Function to load data
