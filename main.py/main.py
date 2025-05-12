@@ -1,23 +1,18 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from keras.models import load_model 
+from keras.models import load_model
 import yfinance as yf
 from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.dates as mdates
 import numpy as np
-import pickle
-with open('scaler.pkl', 'rb') as f:
-    scaler = pickle.load(f)
-
-
 from tensorflow.keras.models import load_model
 
 
 # Load model safely
 try:
-    model = load_model('LSTM_model.keras')
+    model = load_model('LSTM_model.h5')
 except Exception as e:
     st.error(f"Error loading model: {e}")
     st.stop()  # Stops execution if model loading fails
@@ -95,3 +90,4 @@ if st.button('Predict Future Prices'):  # Adding a button to trigger prediction
 # About Section
 st.write("## About this Dashboard")
 st.info("This dashboard analyzes historical stock data and predicts future trends using an LSTM model.")
+
