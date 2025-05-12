@@ -1,63 +1,54 @@
+This is my training model that works
 import numpy as np
 import pandas as pd
-import yfinance as yf
-import matplotlib.pyplot as plt
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
 from sklearn.preprocessing import MinMaxScaler
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, LSTM
-from datetime import datetime
+import os
 
-# Load stock data
-start = '2005-01-01'  # Ensure alignment with your extended date range
-end = datetime.now().strftime('%Y-%m-%d')
-df = yf.download("AAPL", start=start, end=end)  # Change "AAPL" if needed
+# Generate some sample data
+data = np.sin(np.linspace(0, 100, 1000))  
+df = pd.DataFrame(data, columns=["Value"])
 
-# Keep only 'Close' price
-df = df[['Close']]
+# Normalize the data
+scaler = MinMaxScaler(feature_range=(0, 1))
+df["Scaled_Value"] = scaler.fit_transform(df[["Value"]])
 
-# Split into training and testing sets (70% training, 30% testing)
-train_size = int(len(df) * 0.70)
-data_training = df.iloc[:train_size]
-data_testing = df.iloc[train_size:]
+# Create sequences
+def create_sequences(data, seq_length=10):
+    X, y = [], []
+    for i in range(len(data) - seq_length):
+        X.append(data[i:i+seq_length])
+        y.append(data[i+seq_length])
+    return np.array(X), np.array(y)
 
-# Scale data
-scaler = MinMaxScaler(feature_range=(0,1))
-data_training_array = scaler.fit_transform(data_training)
+sequence_length = 10
+X, y = create_sequences(df["Scaled_Value"].values, sequence_length)
 
-# Prepare training data sequences
-x_train, y_train = [], []
-seq_len = 100  # Sequence length
+# Reshape X for LSTM
+X = np.reshape(X, (X.shape[0], X.shape[1], 1))
 
-for i in range(seq_len, len(data_training_array)):
-    x_train.append(data_training_array[i-seq_len: i])
-    y_train.append(data_training_array[i, 0])
+# Build LSTM model
+model = Sequential([
+    LSTM(50, return_sequences=True, input_shape=(sequence_length, 1)),
+    LSTM(50, return_sequences=False),
+    Dense(25),
+    Dense(1)
+])
 
-x_train, y_train = np.array(x_train), np.array(y_train)
+# Compile model
+model.compile(optimizer="adam", loss="mean_squared_error")
 
-# Build LSTM Model
-model = Sequential()
-model.add(LSTM(units=50, activation='relu', return_sequences=True, input_shape=(x_train.shape[1], 1)))
-model.add(Dropout(0.2))
+# Train the model
+model.fit(X, y, epochs=10, batch_size=1, verbose=1)
 
-model.add(LSTM(units=60, activation='relu', return_sequences=True))
-model.add(Dropout(0.3))
+# Save the model
+model.save("LSTM_model.h5")
 
-model.add(LSTM(units=80, activation='relu', return_sequences=True))
-model.add(Dropout(0.4))
+# Verify model creation
+if os.path.exists("LSTM_model.h5"):
+    print("✅ Model successfully created and saved as 'LSTM_model.h5'")
+else:
+    print("❌ Model not saved correctly!")
 
-model.add(LSTM(units=120, activation='relu', return_sequences=False))
-model.add(Dropout(0.5))
 
-model.add(Dense(units=1))  # Output layer
-
-# Compile and train model
-model.compile(optimizer='adam', loss='mean_squared_error')
-model.fit(x_train, y_train, epochs=20, batch_size=32)
-
-# Save trained model
-model.save('LSTM_model.keras', save_format='keras')
-
-# Save the scaler for use in `main.py`
-import pickle
-with open('scaler.pkl', 'wb') as f:
-    pickle.dump(scaler, f)
